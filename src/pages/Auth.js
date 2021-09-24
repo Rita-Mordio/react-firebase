@@ -22,8 +22,7 @@ const Auth = () => {
   }
 
   const onClickGoogleLogin = async () => {
-    const user = await firebaseAPI.signInWithGoogle()
-    console.log('user : ', user)
+    await firebaseAPI.signInWithGoogle()
   }
 
   const onSubmit = async (event) => {

@@ -20,7 +20,6 @@ initializeApp(firebaseConfig)
 
 const firebaseAPI = {
   getAuth: getAuth(),
-  provider: new GoogleAuthProvider(),
   createUserWithEmailAndPassword: async (email, password) => {
     return await createUserWithEmailAndPassword(firebaseAPI.getAuth, email, password)
   },
@@ -28,15 +27,13 @@ const firebaseAPI = {
     return await signInWithEmailAndPassword(firebaseAPI.getAuth, email, password)
   },
   signInWithGoogle: async () => {
-    return await signInWithPopup(firebaseAPI.getAuth, firebaseAPI.provider).then(result => {
-
-      console.log('result : ', result)
+    return await signInWithPopup(firebaseAPI.getAuth, new GoogleAuthProvider()).then((result) => {
       // const credential = GoogleAuthProvider.credentialFromResult(result);
       // const token = credential.accessToken;
-      const user = result.user;
+      const user = result.user
       return user
     })
-  }
+  },
 }
 
 export default firebaseAPI
