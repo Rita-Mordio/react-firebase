@@ -3,11 +3,19 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Home from 'pages/Home'
 import Auth from 'pages/Auth'
 
-const Router = ({ isLoggedIn }) => {
+const Router = ({ user }) => {
   return (
     <BrowserRouter>
       <Switch>
-        {isLoggedIn ? <Route exact path="/" component={Home} /> : <Route exact path="/" component={Auth} />}
+        {user ? (
+          <Route exact path="/">
+            <Home user={user} />
+          </Route>
+        ) : (
+          <Route exact path="/">
+            <Auth />
+          </Route>
+        )}
       </Switch>
     </BrowserRouter>
   )

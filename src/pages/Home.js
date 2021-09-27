@@ -1,37 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import firebaseAPI from '../firebaseAPI'
+import React, { useEffect, useState } from 'react';
+import { getFirestore, collection, query, onSnapshot } from 'firebase/firestore';
+import firebaseAPI from '../firebaseAPI';
 
-const Home = () => {
-  const [text, setText] = useState('')
-  const [tweets, setTweets] = useState([])
-
-  const getTweets = async () => {
-    const result = await firebaseAPI.getDoc('tweets')
-    result.forEach((item) => {
-      const newItem = {
-        id: item.id,
-        ...item.data(),
-      }
-      setTweets((prev) => [newItem, ...prev])
-    })
-  }
+const Home = ({ user }) => {
+  const [text, setText] = useState('');
+  const [tweets, setTweets] = useState([]);
 
   useEffect(() => {
-    getTweets()
-  }, [])
+    onSnapshot(query(collection(getFirestore(), 'tweets')), (querySnapshot) => {
+      const newArray = querySnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      setTweets(newArray);
+    });
+  }, []);
 
-  const onClickSignOut = () => firebaseAPI.signOut()
-  const onChangeInputHandler = (event) => setText(event.target.value)
+  const onClickSignOut = () => firebaseAPI.signOut();
+  const onChangeInputHandler = (event) => setText(event.target.value);
 
-  const onSubmit = async (event) => {
-    event.preventDefault()
-    const resultId = await firebaseAPI.addDoc('tweets', {
+  const onSubmit = (event) => {
+    event.preventDefault();
+    firebaseAPI.addDoc('tweets', {
       value: text,
       createdAt: new Date(),
-    })
-
-    console.log('resultId : ', resultId)
-  }
+      creatorId: user.uid,
+    });
+  };
 
   return (
     <>
@@ -50,6 +47,6 @@ const Home = () => {
         </div>
       ))}
     </>
-  )
-}
-export default Home
+  );
+};
+export default Home;
