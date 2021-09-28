@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getFirestore, collection, query, onSnapshot } from 'firebase/firestore';
 import firebaseAPI from '../firebaseAPI';
+import Tweet from '../components/Tweet';
 
 const Home = ({ user }) => {
   const [text, setText] = useState('');
@@ -37,16 +38,18 @@ const Home = ({ user }) => {
       <h2>TWEET</h2>
       <form onSubmit={onSubmit}>
         <input type="text" placeholder="write anything." name="text" value={text} onChange={onChangeInputHandler} />
-        <input type="submit" value="save" style={{ marginLeft: '10px' }} />
+        <input type="submit" value="save" style={submitStyle} />
       </form>
       <hr />
       {tweets.map((tweet) => (
-        <div key={tweet.id}>
-          <span style={{ marginRight: '10px' }}>{tweet.value}</span>
-          <span>{tweet.createdAt.toDate().toString()}</span>
-        </div>
+        <Tweet key={tweet.id} user={user} tweet={tweet} />
       ))}
     </>
   );
 };
+
+const submitStyle = {
+  marginLeft: '10px',
+};
+
 export default Home;

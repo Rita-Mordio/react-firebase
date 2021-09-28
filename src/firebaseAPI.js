@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, query, addDoc, getDocs, onSnapshot } from 'firebase/firestore';
+import { getFirestore, collection, doc, addDoc, getDocs, deleteDoc, updateDoc  } from 'firebase/firestore';
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -25,8 +25,8 @@ const firebaseAPI = {
   createUserWithEmailAndPassword: async (email, password) => {
     return await createUserWithEmailAndPassword(firebaseAPI.auth, email, password);
   },
-  signInWithEmailAndPassword: async (email, password) => {
-    return await signInWithEmailAndPassword(firebaseAPI.auth, email, password);
+  signInWithEmailAndPassword: (email, password) => {
+    return signInWithEmailAndPassword(firebaseAPI.auth, email, password);
   },
   signInWithGoogle: async () => {
     return await signInWithPopup(firebaseAPI.auth, new GoogleAuthProvider()).then((result) => {
@@ -45,11 +45,12 @@ const firebaseAPI = {
   getDoc: async (collectionName) => {
     return await getDocs(collection(firebaseAPI.db, collectionName));
   },
-  snapshot: async (collectionName) => {
-    return new Promise((resolve) => {
-      onSnapshot(query(collection(getFirestore(), collectionName)), (querySnapshot) => resolve(querySnapshot));
-    });
+  deleteDoc: (deleteAddress) => {
+    return deleteDoc(doc(firebaseAPI.db, deleteAddress));
   },
+  updateDoc: (updateAddress, updateData) => {
+    return updateDoc(doc(firebaseAPI.db, updateAddress), updateData)
+  }
 };
 
 export default firebaseAPI;

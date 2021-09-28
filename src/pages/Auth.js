@@ -31,7 +31,7 @@ const Auth = () => {
     if (isSignUp && password !== confirmPassword) return
 
     if (isSignUp) await firebaseAPI.createUserWithEmailAndPassword(email, password)
-    else await firebaseAPI.signInWithEmailAndPassword(email, password)
+    else firebaseAPI.signInWithEmailAndPassword(email, password)
   }
 
   return (
